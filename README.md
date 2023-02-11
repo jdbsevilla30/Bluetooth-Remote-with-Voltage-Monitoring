@@ -22,7 +22,7 @@ In addition to the hardware, you will need the following software components:
 MIT App Inventor to develop the control app
 Arduino IDE to upload the code to the Arduino board
 Installation
-Clone the repository to your local machine using git clone https://github.com/[username]/Battery-Monitoring-and-Control-System.git
+Clone the repository to your local machine using git clone https://github.com/jdbsevilla30/Battery-Monitoring-and-Control-System.git
 Connect the voltage sensor, relay module, and Servo motor to the Arduino board as per the code.
 Open the code in the Arduino IDE.
 Compile and upload the code to the Arduino board.
