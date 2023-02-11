@@ -30,7 +30,7 @@ void loop() {
 
 /*this function checks if an int value has bee nreceived from the app*/
 void processBluetoothData() {
-  while (Serial1.available( > 0) {
+  while (Serial1.available() > 0) {
     processBluetoothResponse(Serial1.read());
   }
 }
@@ -45,7 +45,7 @@ void processBluetoothResponse(int btResponse) {
     } else if (btResponse == 182) {
       digitalWrite(relayPin, OFF);
     } else {
-      Serial1.println("ERROR")
+      Serial1.println("ERROR");
     }
   }
 }
