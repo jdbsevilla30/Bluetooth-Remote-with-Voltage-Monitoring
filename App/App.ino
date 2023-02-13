@@ -67,5 +67,9 @@ void getVoltage() {
   float voltageSensorRaw = analogRead(voltageSensorPin);
   float vOut = (voltageSensorRaw / 1024) * vcc;
   float vIn = vOut * reductionFactor;
-  Serial1.println((String) "Battery Voltage = " + vIn + (String) "V");
+  Serial1.print((String) "Battery Voltage = " + vIn + (String) "V");
+  Serial1.print("|");
+  Serial1.print((String) "Turbine Voltage = " + vIn + (String) "V");
+  Serial1.print("|");
+  Serial1.print((String) "Hydro Voltage = " + vIn + (String) "V");
 }
