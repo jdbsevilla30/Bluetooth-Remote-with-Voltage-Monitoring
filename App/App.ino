@@ -64,9 +64,7 @@ void processBluetoothResponse(int btResponse) {
       digitalWrite(relayPin, ON);
     } else if (btResponse == 182) {
       digitalWrite(relayPin, OFF);
-    } else {
-      Serial1.println("ERROR");
-    }
+    } 
   }
 }
 
