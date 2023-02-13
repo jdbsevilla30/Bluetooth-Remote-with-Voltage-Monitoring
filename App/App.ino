@@ -1,13 +1,12 @@
-/*Servo library and instance*/
-#include <Servo.h>
-Servo myservo;
-
 /*LOW/HIGH assignments for relay trigger*/
 #define ON LOW
 #define OFF HIGH
-#define NewLine Serial1.println();
-#define Delimiter Serial1.print("|");
 
+/*NewLine*/
+#define NewLine Serial1.println();
+
+/*"|" as delimiter*/
+#define Delimiter Serial1.print("|");
 /*solar  sensor pin Analog 0*/
 const int voltageSensorPinSolar = A0;
 
@@ -17,21 +16,30 @@ const int voltageSensorPinTurbine = A1;
 /*Battery sensor pin Analog 2*/
 const int voltageSensorPinBattery = A2;
 
+/*a value we need for our voltage sensor*/
+const float vcc = 5.00;  //arduino input voltage
+
+/*Servo library and instance*/
+#include <Servo.h>
+Servo myservo;
+const int myServoPin = 9;
+
 /*relay pin (motor blade)*/
 const int relayPin = 13;
 
 /*non-blocking millis print for our function displayVoltage()*/
-const long printInterval = 1000;
+const long printInterval = 1000;  //1000 = 1 sec
 unsigned long previousMillis = 0;
 
+/*run once*/
 void setup() {
   Serial1.begin(9600);
-  Serial.begin(9600);
   pinMode(relayPin, OUTPUT);
   digitalWrite(relayPin, OFF);
-  myservo.attach(9);
+  myservo.attach(myServoPin);
 }
 
+/*runs forever*/
 void loop() {
   processBluetoothData();
   displayVoltage();
@@ -49,7 +57,7 @@ void processBluetoothResponse(int btResponse) {
   if (btResponse == 1) {
     myservo.detach();
   } else if (btResponse > 0 && btResponse <= 180) {
-    myservo.attach(9);
+    myservo.attach(myServoPin);
     myservo.write(btResponse);
   } else if (btResponse > 180) {
     if (btResponse == 181) {
@@ -59,7 +67,6 @@ void processBluetoothResponse(int btResponse) {
     } else {
       Serial1.println("ERROR");
     }
-  } else {
   }
 }
 
@@ -83,29 +90,29 @@ void getVoltage() {
   NewLine;
 }
 
+/*this function gets the voltage of the solar panel*/
 void getSolar() {
   const float reductionFactorSolar = 5.128;  //reductionFactor = Adapter vOut / A0 vOut
-  const float vccSolar = 5.00;               //arduino input voltage
   float voltageSensorRawSolar = analogRead(voltageSensorPinSolar);
-  float vOutSolar = (voltageSensorRawSolar / 1024) * vccSolar;
+  float vOutSolar = (voltageSensorRawSolar / 1024) * vcc;
   float vInSolar = vOutSolar * reductionFactorSolar;
   Serial1.print(vInSolar + (String) "V");
 }
 
+/*this function gets the voltage of the wind turbine*/
 void getTurbine() {
   const float reductionFactorTurbine = 5.128;  //reductionFactor = Adapter vOut / A1 vOut
-  const float vccTurbine = 5.00;               //arduino input voltage
   float voltageSensorRawTurbine = analogRead(voltageSensorPinTurbine);
-  float vOutTurbine = (voltageSensorRawTurbine / 1024) * vccTurbine;
+  float vOutTurbine = (voltageSensorRawTurbine / 1024) * vcc;
   float vInTurbine = vOutTurbine * reductionFactorTurbine;
   Serial1.print(vInTurbine + (String) "V");
 }
 
+/*this function gets the voltage of the battery*/
 void getBattery() {
   const float reductionFactorBattery = 5.128;  //reductionFactor = Adapter vOut / A2 vOut
-  const float vccBattery = 5.00;               //arduino input voltage
   float voltageSensorRawBattery = analogRead(voltageSensorPinBattery);
-  float vOutBattery = (voltageSensorRawBattery / 1024) * vccBattery;
+  float vOutBattery = (voltageSensorRawBattery / 1024) * vcc;
   float vInBattery = vOutBattery * reductionFactorBattery;
   Serial1.print(vInBattery + (String) "V");
 }
