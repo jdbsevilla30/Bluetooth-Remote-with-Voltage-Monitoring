@@ -18,6 +18,7 @@ unsigned long previousMillis = 0;
 
 void setup() {
   Serial1.begin(9600);
+  Serial.begin(9600);
   pinMode(relayPin, OUTPUT);
   digitalWrite(relayPin, OFF);
   myservo.attach(9);
@@ -67,9 +68,10 @@ void getVoltage() {
   float voltageSensorRaw = analogRead(voltageSensorPin);
   float vOut = (voltageSensorRaw / 1024) * vcc;
   float vIn = vOut * reductionFactor;
-  Serial1.print((String) "Battery Voltage = " + vIn + (String) "V");
+  Serial1.print(vIn + (String) "V");
   Serial1.print("|");
-  Serial1.print((String) "Turbine Voltage = " + vIn + (String) "V");
+  Serial1.print(vIn + (String) "V");
   Serial1.print("|");
-  Serial1.print((String) "Hydro Voltage = " + vIn + (String) "V");
+  Serial1.print(vIn + (String) "V");
+  Serial1.println();
 }
