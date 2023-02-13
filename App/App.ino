@@ -5,9 +5,17 @@ Servo myservo;
 /*LOW/HIGH assignments for relay trigger*/
 #define ON LOW
 #define OFF HIGH
+#define NewLine Serial1.println();
+#define Delimiter Serial1.print("|");
 
-/*voltage sensor pin Analog 0*/
-const int voltageSensorPin = A0;
+/*solar  sensor pin Analog 0*/
+const int voltageSensorPinSolar = A0;
+
+/*turbine sensor pin Analog 1*/
+const int voltageSensorPinTurbine = A1;
+
+/*Battery sensor pin Analog 2*/
+const int voltageSensorPinBattery = A2;
 
 /*relay pin (motor blade)*/
 const int relayPin = 13;
@@ -38,7 +46,10 @@ void processBluetoothData() {
 
 /*this is where the bluetooth response will be processed. depending on the int value get from app*/
 void processBluetoothResponse(int btResponse) {
-  if (btResponse > 0 && btResponse <= 180) {
+  if (btResponse == 1) {
+    myservo.detach();
+  } else if (btResponse > 0 && btResponse <= 180) {
+    myservo.attach(9);
     myservo.write(btResponse);
   } else if (btResponse > 180) {
     if (btResponse == 181) {
@@ -48,6 +59,7 @@ void processBluetoothResponse(int btResponse) {
     } else {
       Serial1.println("ERROR");
     }
+  } else {
   }
 }
 
@@ -63,15 +75,37 @@ void displayVoltage() {
 
 /*calculate our voltage sensor value*/
 void getVoltage() {
-  const float reductionFactor = 5.128;  //reductionFactor = Adapter vOut / A3 vOut
-  const float vcc = 5.00;               //arduino input voltage
-  float voltageSensorRaw = analogRead(voltageSensorPin);
-  float vOut = (voltageSensorRaw / 1024) * vcc;
-  float vIn = vOut * reductionFactor;
-  Serial1.print(vIn + (String) "V");
-  Serial1.print("|");
-  Serial1.print(vIn + (String) "V");
-  Serial1.print("|");
-  Serial1.print(vIn + (String) "V");
-  Serial1.println();
+  getSolar();
+  Delimiter;
+  getTurbine();
+  Delimiter;
+  getBattery();
+  NewLine;
+}
+
+void getSolar() {
+  const float reductionFactorSolar = 5.128;  //reductionFactor = Adapter vOut / A0 vOut
+  const float vccSolar = 5.00;               //arduino input voltage
+  float voltageSensorRawSolar = analogRead(voltageSensorPinSolar);
+  float vOutSolar = (voltageSensorRawSolar / 1024) * vccSolar;
+  float vInSolar = vOutSolar * reductionFactorSolar;
+  Serial1.print(vInSolar + (String) "V");
+}
+
+void getTurbine() {
+  const float reductionFactorTurbine = 5.128;  //reductionFactor = Adapter vOut / A1 vOut
+  const float vccTurbine = 5.00;               //arduino input voltage
+  float voltageSensorRawTurbine = analogRead(voltageSensorPinTurbine);
+  float vOutTurbine = (voltageSensorRawTurbine / 1024) * vccTurbine;
+  float vInTurbine = vOutTurbine * reductionFactorTurbine;
+  Serial1.print(vInTurbine + (String) "V");
+}
+
+void getBattery() {
+  const float reductionFactorBattery = 5.128;  //reductionFactor = Adapter vOut / A2 vOut
+  const float vccBattery = 5.00;               //arduino input voltage
+  float voltageSensorRawBattery = analogRead(voltageSensorPinBattery);
+  float vOutBattery = (voltageSensorRawBattery / 1024) * vccBattery;
+  float vInBattery = vOutBattery * reductionFactorBattery;
+  Serial1.print(vInBattery + (String) "V");
 }
