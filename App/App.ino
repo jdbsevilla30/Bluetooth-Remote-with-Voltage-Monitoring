@@ -64,7 +64,7 @@ void processBluetoothResponse(int btResponse) {
       digitalWrite(relayPin, ON);
     } else if (btResponse == 182) {
       digitalWrite(relayPin, OFF);
-    } 
+    }
   }
 }
 
@@ -95,6 +95,9 @@ void getSolar() {
   float vOutSolar = (voltageSensorRawSolar / 1024) * vcc;
   float vInSolar = vOutSolar * reductionFactorSolar;
   Serial1.print(vInSolar + (String) "V");
+  Serial.print("Solar voltage: ");
+  Serial.print(vInSolar);
+  Serial.println("");
 }
 
 /*this function gets the voltage of the wind turbine*/
@@ -104,6 +107,9 @@ void getTurbine() {
   float vOutTurbine = (voltageSensorRawTurbine / 1024) * vcc;
   float vInTurbine = vOutTurbine * reductionFactorTurbine;
   Serial1.print(vInTurbine + (String) "V");
+  Serial.print("Turbine voltage: ");
+  Serial.print(vInTurbine);
+  Serial.println("");
 }
 
 /*this function gets the voltage of the battery*/
@@ -113,4 +119,7 @@ void getBattery() {
   float vOutBattery = (voltageSensorRawBattery / 1024) * vcc;
   float vInBattery = vOutBattery * reductionFactorBattery;
   Serial1.print(vInBattery + (String) "V");
+  Serial.print("Battery voltage: ");
+  Serial.print(vInBattery);
+  Serial.println("");
 }
